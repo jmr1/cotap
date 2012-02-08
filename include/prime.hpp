@@ -67,25 +67,33 @@ namespace prime
 
 	template <typename Value, typename ValueDiv = mpl::int_<2> >
 	struct is_prime :
-		mpl::eval_if< mpl::greater< mpl::times< ValueDiv, ValueDiv >, Value >,
+		mpl::eval_if< mpl::greater< mpl::times< ValueDiv, ValueDiv >, 
+		                            Value 
+		              >,
 		              mpl::true_,
 		              mpl::eval_if< is_divisible< Value, ValueDiv >,
 					                mpl::false_,
-					                is_prime< Value, mpl::plus< mpl::int_<1>, ValueDiv > >
-					              >
-					  >::type
+					                is_prime< Value, 
+									          mpl::plus< mpl::int_<1>, ValueDiv > 
+									>
+					  >
+		>::type
 	{
 	};
 
 	template <typename T, T Value, T ValueDiv = 2 >
 	struct is_prime_c :
-		mpl::eval_if< mpl::greater< mpl::times< mpl::integral_c< T, ValueDiv >, mpl::integral_c< T, ValueDiv > >, mpl::integral_c< T, Value > >,
+		mpl::eval_if< mpl::greater< mpl::times< mpl::integral_c< T, ValueDiv >, mpl::integral_c< T, ValueDiv > >, 
+		                            mpl::integral_c< T, Value > 
+		              >,
 		              mpl::true_,
 		              mpl::eval_if< is_divisible< mpl::integral_c< T, Value >, mpl::integral_c< T, ValueDiv > >,
 					                mpl::false_,
-					                is_prime< mpl::integral_c< T, Value >, mpl::plus< mpl::int_<1>, mpl::integral_c< T, ValueDiv > > >
-					              >
-					  >::type
+					                is_prime< mpl::integral_c< T, Value >, 
+									          mpl::plus< mpl::int_<1>, mpl::integral_c< T, ValueDiv > > 
+									>
+					  >
+		>::type
 	{
 	};
 
