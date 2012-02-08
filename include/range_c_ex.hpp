@@ -44,11 +44,11 @@ namespace boost { namespace mpl {
 
 
 template< typename N, typename T > struct r_iter_ex :
-	r_iter<N>
+    r_iter<N>
 {
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-	typedef r_iter_ex< typename mpl::plus< N, T >::type > next;
+    typedef r_iter_ex< typename mpl::plus< N, T >::type > next;
 #endif
 };
 
@@ -59,7 +59,7 @@ template<
     >
 struct next< r_iter_ex<N,T> >
 {
-	typedef r_iter_ex< typename mpl::plus< N, T >::type, T > type;
+    typedef r_iter_ex< typename mpl::plus< N, T >::type, T > type;
 };
 
 #endif
@@ -71,7 +71,7 @@ template<
       typename T
     , T Start
     , T Finish
-	, T Step
+    , T Step
     >
 struct range_c_ex
 {
@@ -81,7 +81,7 @@ struct range_c_ex
 
     typedef integral_c<T,Start> start;
     typedef integral_c<T,Finish> finish;
-	typedef integral_c<T,Step> step;
+    typedef integral_c<T,Step> step;
 
     typedef r_iter_ex<start, step> begin;
     typedef r_iter_ex<finish, step> end;
