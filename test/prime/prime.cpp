@@ -48,12 +48,36 @@ static unsigned int org[] = {2,3,5,7,
 
 
 
+
 int main(int argc, char** argv)
 {
+    typedef prime::DIVISION_BY_ZERO_ERROR<mpl::int_<0> >::type dbz0;
+    BOOST_MPL_ASSERT_RELATION( dbz0::value, ==, false );
 
-    BOOST_MPL_ASSERT((prime::is_divisible<mpl::int_<9>, mpl::int_<3> >));
+    typedef prime::DIVISION_BY_ZERO_ERROR_C<int, 0>::type dbz0_c;
+    BOOST_MPL_ASSERT_RELATION( dbz0_c::value, ==, false );
 
-    BOOST_MPL_ASSERT((prime::is_divisible_c<int, 9, 3 >));
+    typedef prime::DIVISION_BY_ZERO_ERROR<mpl::int_<9> >::type dbz9;
+    BOOST_MPL_ASSERT_RELATION( dbz9::value, ==, true );
+
+    typedef prime::DIVISION_BY_ZERO_ERROR_C<int, 9>::type dbz9_c;
+    BOOST_MPL_ASSERT_RELATION( dbz9_c::value, ==, true );
+
+    // is_divisible
+    typedef prime::is_divisible<mpl::int_<9>, mpl::int_<3> >::type is_div_9_3;
+    BOOST_MPL_ASSERT_RELATION( is_div_9_3::value, ==, true );
+
+    typedef prime::is_divisible_c<int, 9, 3 >::type is_div_c_9_3;
+    BOOST_MPL_ASSERT_RELATION( is_div_c_9_3::value, ==, true );
+
+    typedef prime::is_divisible<mpl::int_<8>, mpl::int_<3> >::type is_div_8_3;
+    BOOST_MPL_ASSERT_RELATION( is_div_8_3::value, ==, false );
+
+    typedef prime::is_divisible_c<int, 8, 3 >::type is_div_c_8_3;
+    BOOST_MPL_ASSERT_RELATION( is_div_c_8_3::value, ==, false );
+
+
+
 
     BOOST_MPL_ASSERT((prime::is_prime<mpl::int_<11> >));
 

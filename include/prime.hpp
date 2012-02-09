@@ -33,6 +33,7 @@
 
 #include <boost/mpl/filter_view.hpp>
 
+#include <boost/mpl/not_equal_to.hpp>
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/times.hpp>
@@ -45,6 +46,20 @@
 
 namespace prime
 {
+    template <typename ValueDiv>
+    struct DIVISION_BY_ZERO_ERROR :
+        mpl::not_equal_to< mpl::int_<0>, 
+                           ValueDiv 
+        >::type
+    {};
+
+    template <typename T, T ValueDiv>
+    struct DIVISION_BY_ZERO_ERROR_C :
+        mpl::not_equal_to< mpl::integral_c< T, 0 >, 
+                           mpl::integral_c< T, ValueDiv >
+        >::type
+    {};
+
     template <typename Value, typename ValueDiv>
     struct is_divisible :
         mpl::equal_to< mpl::int_<0>, 
@@ -53,6 +68,7 @@ namespace prime
                        > 
         >::type
     {
+        BOOST_MPL_ASSERT((DIVISION_BY_ZERO_ERROR<ValueDiv>));
     };
 
     template <typename T, T Value, T ValueDiv>
@@ -63,6 +79,7 @@ namespace prime
                        > 
         >::type
     {
+        BOOST_MPL_ASSERT((DIVISION_BY_ZERO_ERROR_C<T, ValueDiv>));
     };
 
     template <typename Value, typename ValueDiv = mpl::int_<2> >
