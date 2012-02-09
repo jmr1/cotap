@@ -36,6 +36,7 @@
 #include <boost/mpl/not_equal_to.hpp>
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/greater.hpp>
+#include <boost/mpl/less.hpp>
 #include <boost/mpl/times.hpp>
 
 #include <boost/mpl/alias.hpp>
@@ -53,13 +54,6 @@ namespace prime
         >::type
     {};
 
-    template <typename T, T ValueDiv>
-    struct DIVISION_BY_ZERO_ERROR_C :
-        mpl::not_equal_to< mpl::integral_c< T, 0 >, 
-                           mpl::integral_c< T, ValueDiv >
-        >::type
-    {};
-
     template <typename Value, typename ValueDiv>
     struct is_divisible :
         mpl::equal_to< mpl::int_<0>, 
@@ -68,7 +62,9 @@ namespace prime
                        > 
         >::type
     {
+#ifdef _COTAP_ERROR_CHECK_
         BOOST_MPL_ASSERT((DIVISION_BY_ZERO_ERROR<ValueDiv>));
+#endif //_COTAP_ERROR_CHECK_
     };
 
     template <typename T, T Value, T ValueDiv>
@@ -79,8 +75,47 @@ namespace prime
                        > 
         >::type
     {
-        BOOST_MPL_ASSERT((DIVISION_BY_ZERO_ERROR_C<T, ValueDiv>));
+#ifdef _COTAP_ERROR_CHECK_
+        BOOST_MPL_ASSERT((DIVISION_BY_ZERO_ERROR<mpl::int_<ValueDiv> >));
+#endif //_COTAP_ERROR_CHECK_
     };
+
+    template <typename ValueDiv>
+    struct DIVISOR_LESS_THAN_2_ERROR :
+        mpl::greater< ValueDiv, 
+                      mpl::int_<1> 
+        >::type
+    {};
+
+    template <typename Value>
+    struct DIVIDENT_LESS_THAN_2_ERROR :
+        mpl::greater< Value, 
+                      mpl::int_<1> 
+        >::type
+    {};
+
+    template <typename Value, typename ValueDiv>
+    struct DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR :
+        mpl::eval_if< mpl::greater< Value, mpl::int_<2> >,
+                      mpl::less< ValueDiv, Value >,
+                      mpl::true_ // not raising error here because 
+                                 // dividents less than or equal to 2 
+                                 // are caught by DIVIDENT_LESS_THAN_2_ERROR 
+        >::type
+    {};
+
+    /*template <typename Value>
+    struct DIVIDENT_EVEN_NUMBER_ERROR :
+        mpl::and_< mpl::greater< Value, 
+                                 mpl::int_<2> 
+                                 >, 
+                   mpl::not_equal_to< mpl::int_<0>, 
+                                      mpl::modulus< Value, 
+                                                    mpl::int_<2> 
+                                                    > 
+                                      >
+        >::type
+    {};*/
 
     template <typename Value, typename ValueDiv = mpl::int_<2> >
     struct is_prime :
@@ -96,22 +131,40 @@ namespace prime
                       >
         >::type
     {
+#ifdef _COTAP_ERROR_CHECK_
+        BOOST_MPL_ASSERT((DIVISOR_LESS_THAN_2_ERROR<ValueDiv>));
+        BOOST_MPL_ASSERT((DIVIDENT_LESS_THAN_2_ERROR<Value>));
+        BOOST_MPL_ASSERT((DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<Value, ValueDiv>));
+        //BOOST_MPL_ASSERT((DIVIDENT_EVEN_NUMBER_ERROR<Value>));
+#endif //_COTAP_ERROR_CHECK_
     };
 
     template <typename T, T Value, T ValueDiv = 2 >
     struct is_prime_c :
-        mpl::eval_if< mpl::greater< mpl::times< mpl::integral_c< T, ValueDiv >, mpl::integral_c< T, ValueDiv > >, 
+        mpl::eval_if< mpl::greater< mpl::times< mpl::integral_c< T, ValueDiv >, 
+                                                mpl::integral_c< T, ValueDiv > 
+                                                >, 
                                     mpl::integral_c< T, Value > 
-                      >,
+                                    >,
                       mpl::true_,
-                      mpl::eval_if< is_divisible< mpl::integral_c< T, Value >, mpl::integral_c< T, ValueDiv > >,
+                      mpl::eval_if< is_divisible< mpl::integral_c< T, Value >, 
+                                                  mpl::integral_c< T, ValueDiv > 
+                                                  >,
                                     mpl::false_,
                                     is_prime< mpl::integral_c< T, Value >, 
-                                              mpl::plus< mpl::int_<1>, mpl::integral_c< T, ValueDiv > > 
-                                    >
+                                              mpl::plus< mpl::integral_c< T, 1 >, 
+                                                         mpl::integral_c< T, ValueDiv > 
+                                                         > 
+                                              >
                       >
         >::type
     {
+#ifdef _COTAP_ERROR_CHECK_
+        BOOST_MPL_ASSERT((DIVISOR_LESS_THAN_2_ERROR<mpl::int_<ValueDiv> >));
+        BOOST_MPL_ASSERT((DIVIDENT_LESS_THAN_2_ERROR<mpl::int_<Value> >));
+        BOOST_MPL_ASSERT((DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<mpl::int_<Value>, mpl::int_<ValueDiv> >));
+        //BOOST_MPL_ASSERT((DIVIDENT_EVEN_NUMBER_ERROR<Value>));
+#endif //_COTAP_ERROR_CHECK_
     };
 
     template <typename T, T StartValue, T EndValue, T Step = 2>

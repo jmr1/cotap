@@ -37,7 +37,10 @@
 
 #include <boost/bind.hpp>
 
+#define _COTAP_ERROR_CHECK_
+
 #include "prime.hpp"
+
 
 
 static unsigned int org[] = {2,3,5,7,
@@ -51,17 +54,12 @@ static unsigned int org[] = {2,3,5,7,
 
 int main(int argc, char** argv)
 {
+    //division by zero
     typedef prime::DIVISION_BY_ZERO_ERROR<mpl::int_<0> >::type dbz0;
     BOOST_MPL_ASSERT_RELATION( dbz0::value, ==, false );
 
-    typedef prime::DIVISION_BY_ZERO_ERROR_C<int, 0>::type dbz0_c;
-    BOOST_MPL_ASSERT_RELATION( dbz0_c::value, ==, false );
-
     typedef prime::DIVISION_BY_ZERO_ERROR<mpl::int_<9> >::type dbz9;
     BOOST_MPL_ASSERT_RELATION( dbz9::value, ==, true );
-
-    typedef prime::DIVISION_BY_ZERO_ERROR_C<int, 9>::type dbz9_c;
-    BOOST_MPL_ASSERT_RELATION( dbz9_c::value, ==, true );
 
     // is_divisible
     typedef prime::is_divisible<mpl::int_<9>, mpl::int_<3> >::type is_div_9_3;
@@ -76,12 +74,60 @@ int main(int argc, char** argv)
     typedef prime::is_divisible_c<int, 8, 3 >::type is_div_c_8_3;
     BOOST_MPL_ASSERT_RELATION( is_div_c_8_3::value, ==, false );
 
+    //is_prime errors
+    typedef prime::DIVISOR_LESS_THAN_2_ERROR<mpl::int_<0> >::type divless2_0;
+    BOOST_MPL_ASSERT_RELATION( divless2_0::value, ==, false );
+
+    typedef prime::DIVISOR_LESS_THAN_2_ERROR<mpl::int_<2> >::type divless2_2;
+    BOOST_MPL_ASSERT_RELATION( divless2_2::value, ==, true );
+
+    typedef prime::DIVISOR_LESS_THAN_2_ERROR<mpl::int_<3> >::type divless2_3;
+    BOOST_MPL_ASSERT_RELATION( divless2_3::value, ==, true );
 
 
+    typedef prime::DIVIDENT_LESS_THAN_2_ERROR<mpl::int_<0> >::type divdntless2_0;
+    BOOST_MPL_ASSERT_RELATION( divdntless2_0::value, ==, false );
 
-    BOOST_MPL_ASSERT((prime::is_prime<mpl::int_<11> >));
+    typedef prime::DIVIDENT_LESS_THAN_2_ERROR<mpl::int_<2> >::type divdntless2_2;
+    BOOST_MPL_ASSERT_RELATION( divdntless2_2::value, ==, true );
 
-    BOOST_MPL_ASSERT((prime::is_prime_c<int, 11 >));
+    typedef prime::DIVIDENT_LESS_THAN_2_ERROR<mpl::int_<3> >::type divdntless2_3;
+    BOOST_MPL_ASSERT_RELATION( divdntless2_3::value, ==, true );
+
+
+    typedef prime::DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<mpl::int_<3>, mpl::int_<4> >::type divgreqdivdnt_3_4;
+    BOOST_MPL_ASSERT_RELATION( divgreqdivdnt_3_4::value, ==, false );
+
+    typedef prime::DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<mpl::int_<3>, mpl::int_<3> >::type divgreqdivdnt_3_3;
+    BOOST_MPL_ASSERT_RELATION( divgreqdivdnt_3_3::value, ==, false );
+
+    typedef prime::DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<mpl::int_<3>, mpl::int_<2> >::type divgreqdivdnt_3_2;
+    BOOST_MPL_ASSERT_RELATION( divgreqdivdnt_3_2::value, ==, true );
+
+    //is_prime
+    typedef prime::is_prime< mpl::int_<11> >::type is_prime_11;
+    BOOST_MPL_ASSERT_RELATION( is_prime_11::value, ==, true );
+
+    typedef prime::is_prime_c<int, 11 >::type is_prime_c_11;
+    BOOST_MPL_ASSERT_RELATION( is_prime_c_11::value, ==, true );
+
+    typedef prime::is_prime< mpl::int_<15> >::type is_prime_15;
+    BOOST_MPL_ASSERT_RELATION( is_prime_15::value, ==, false );
+
+    typedef prime::is_prime_c<int, 15 >::type is_prime_c_15;
+    BOOST_MPL_ASSERT_RELATION( is_prime_c_15::value, ==, false );
+
+    typedef prime::is_prime< mpl::int_<10> >::type is_prime_10;
+    BOOST_MPL_ASSERT_RELATION( is_prime_10::value, ==, false );
+
+    typedef prime::is_prime_c<int, 10 >::type is_prime_c_10;
+    BOOST_MPL_ASSERT_RELATION( is_prime_c_10::value, ==, false );
+
+    typedef prime::is_prime< mpl::int_<2> >::type is_prime_2;
+    BOOST_MPL_ASSERT_RELATION( is_prime_2::value, ==, true );
+
+    typedef prime::is_prime_c<int, 2 >::type is_prime_c_2;
+    BOOST_MPL_ASSERT_RELATION( is_prime_c_2::value, ==, true );
 
     
     typedef prime::prime_gen_c<int, 3, 151>::type primes;
