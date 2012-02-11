@@ -129,6 +129,33 @@ int main(int argc, char** argv)
     typedef prime::is_prime_c<int, 2 >::type is_prime_c_2;
     BOOST_MPL_ASSERT_RELATION( is_prime_c_2::value, ==, true );
 
+    //prime_gen_c errors
+    typedef prime::START_VALUE_EVEN_NUMBER_ERROR<mpl::int_<4> >::type starteven_4;
+    BOOST_MPL_ASSERT_RELATION( starteven_4::value, ==, false );
+
+    typedef prime::START_VALUE_EVEN_NUMBER_ERROR<mpl::int_<5> >::type starteven_5;
+    BOOST_MPL_ASSERT_RELATION( starteven_5::value, ==, true );
+
+    typedef prime::STEP_ODD_NUMBER_ERROR<mpl::int_<5> >::type stepodd_5;
+    BOOST_MPL_ASSERT_RELATION( stepodd_5::value, ==, false );
+
+    typedef prime::STEP_ODD_NUMBER_ERROR<mpl::int_<4> >::type stepodd_4;
+    BOOST_MPL_ASSERT_RELATION( stepodd_4::value, ==, true );
+
+    //prime_gen_c
+    typedef prime::prime_gen_c<int, 3, 15>::type primes_3;
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3::begin>::type::value, ==, 3 );
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3::begin::next>::type::value, ==, 5 );
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3::begin::next::next>::type::value, ==, 7 );
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3::begin::next::next::next>::type::value, ==, 11 );
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3::begin::next::next::next::next>::type::value, ==, 13 );
+
+    typedef prime::prime_gen_c<int, 3, 15, 4>::type primes_3_4;
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3_4::begin>::type::value, ==, 3 );
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3_4::begin::next>::type::value, ==, 7 );
+    BOOST_MPL_ASSERT_RELATION( mpl::deref<primes_3_4::begin::next::next>::type::value, ==, 11 );
+
+
     
     typedef prime::prime_gen_c<int, 3, 151>::type primes;
 

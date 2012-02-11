@@ -104,19 +104,6 @@ namespace prime
         >::type
     {};
 
-    /*template <typename Value>
-    struct DIVIDENT_EVEN_NUMBER_ERROR :
-        mpl::and_< mpl::greater< Value, 
-                                 mpl::int_<2> 
-                                 >, 
-                   mpl::not_equal_to< mpl::int_<0>, 
-                                      mpl::modulus< Value, 
-                                                    mpl::int_<2> 
-                                                    > 
-                                      >
-        >::type
-    {};*/
-
     template <typename Value, typename ValueDiv = mpl::int_<2> >
     struct is_prime :
         mpl::eval_if< mpl::greater< mpl::times< ValueDiv, ValueDiv >, 
@@ -135,7 +122,6 @@ namespace prime
         BOOST_MPL_ASSERT((DIVISOR_LESS_THAN_2_ERROR<ValueDiv>));
         BOOST_MPL_ASSERT((DIVIDENT_LESS_THAN_2_ERROR<Value>));
         BOOST_MPL_ASSERT((DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<Value, ValueDiv>));
-        //BOOST_MPL_ASSERT((DIVIDENT_EVEN_NUMBER_ERROR<Value>));
 #endif //_COTAP_ERROR_CHECK_
     };
 
@@ -163,9 +149,26 @@ namespace prime
         BOOST_MPL_ASSERT((DIVISOR_LESS_THAN_2_ERROR<mpl::int_<ValueDiv> >));
         BOOST_MPL_ASSERT((DIVIDENT_LESS_THAN_2_ERROR<mpl::int_<Value> >));
         BOOST_MPL_ASSERT((DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<mpl::int_<Value>, mpl::int_<ValueDiv> >));
-        //BOOST_MPL_ASSERT((DIVIDENT_EVEN_NUMBER_ERROR<Value>));
 #endif //_COTAP_ERROR_CHECK_
     };
+
+    template <typename Value>
+    struct START_VALUE_EVEN_NUMBER_ERROR :
+        mpl::not_equal_to< mpl::int_<0>, 
+                           mpl::modulus< Value, 
+                                         mpl::int_<2> 
+                                         > 
+        >::type
+    {};
+
+    template <typename Step>
+    struct STEP_ODD_NUMBER_ERROR :
+        mpl::equal_to< mpl::int_<0>, 
+                       mpl::modulus< Step, 
+                                     mpl::int_<2> 
+                                     > 
+        >::type
+    {};
 
     template <typename T, T StartValue, T EndValue, T Step = 2>
     struct prime_gen_c :
@@ -174,7 +177,8 @@ namespace prime
             is_prime< mpl::_ >
         >::type
     {
-
+        BOOST_MPL_ASSERT((START_VALUE_EVEN_NUMBER_ERROR<mpl::int_<StartValue> >));
+        BOOST_MPL_ASSERT((STEP_ODD_NUMBER_ERROR<mpl::int_<Step> >));
     };
 
 
