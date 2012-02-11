@@ -177,8 +177,10 @@ namespace prime
             is_prime< mpl::_ >
         >::type
     {
+#ifdef _COTAP_ERROR_CHECK_
         BOOST_MPL_ASSERT((START_VALUE_EVEN_NUMBER_ERROR<mpl::int_<StartValue> >));
         BOOST_MPL_ASSERT((STEP_ODD_NUMBER_ERROR<mpl::int_<Step> >));
+#endif //_COTAP_ERROR_CHECK_
     };
 
 
