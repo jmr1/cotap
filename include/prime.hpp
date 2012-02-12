@@ -42,18 +42,12 @@
 #include <boost/mpl/alias.hpp>
 
 #include "range_c_ex.hpp"
+#include "error.hpp"
 
 
 
 namespace prime
 {
-    template <typename ValueDiv>
-    struct DIVISION_BY_ZERO_ERROR :
-        mpl::not_equal_to< mpl::int_<0>, 
-                           ValueDiv 
-        >::type
-    {};
-
     template <typename Value, typename ValueDiv>
     struct is_divisible :
         mpl::equal_to< mpl::int_<0>, 
@@ -79,30 +73,6 @@ namespace prime
         BOOST_MPL_ASSERT((DIVISION_BY_ZERO_ERROR<mpl::int_<ValueDiv> >));
 #endif //_COTAP_ERROR_CHECK_
     };
-
-    template <typename ValueDiv>
-    struct DIVISOR_LESS_THAN_2_ERROR :
-        mpl::greater< ValueDiv, 
-                      mpl::int_<1> 
-        >::type
-    {};
-
-    template <typename Value>
-    struct DIVIDENT_LESS_THAN_2_ERROR :
-        mpl::greater< Value, 
-                      mpl::int_<1> 
-        >::type
-    {};
-
-    template <typename Value, typename ValueDiv>
-    struct DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR :
-        mpl::eval_if< mpl::greater< Value, mpl::int_<2> >,
-                      mpl::less< ValueDiv, Value >,
-                      mpl::true_ // not raising error here because 
-                                 // dividents less than or equal to 2 
-                                 // are caught by DIVIDENT_LESS_THAN_2_ERROR 
-        >::type
-    {};
 
     template <typename Value, typename ValueDiv = mpl::int_<2> >
     struct is_prime :
@@ -149,24 +119,6 @@ namespace prime
         BOOST_MPL_ASSERT((DIVIDER_GREATER_OR_EQUAL_TO_DIVIDENT_ERROR<mpl::int_<Value>, mpl::int_<ValueDiv> >));
 #endif //_COTAP_ERROR_CHECK_
     };
-
-    template <typename Value>
-    struct START_VALUE_EVEN_NUMBER_ERROR :
-        mpl::not_equal_to< mpl::int_<0>, 
-                           mpl::modulus< Value, 
-                                         mpl::int_<2> 
-                                         > 
-        >::type
-    {};
-
-    template <typename Step>
-    struct STEP_ODD_NUMBER_ERROR :
-        mpl::equal_to< mpl::int_<0>, 
-                       mpl::modulus< Step, 
-                                     mpl::int_<2> 
-                                     > 
-        >::type
-    {};
 
     template <typename T, T StartValue, T EndValue, T Step = 2>
     struct prime_gen_c :
