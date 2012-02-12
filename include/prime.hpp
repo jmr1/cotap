@@ -113,7 +113,7 @@ namespace prime
                       mpl::eval_if< is_divisible< Value, ValueDiv >,
                                     mpl::false_,
                                     is_prime< Value, 
-                                              mpl::plus< mpl::int_<1>, ValueDiv > 
+                                              typename ValueDiv::next
                                     >
                       >
         >::type
@@ -138,9 +138,7 @@ namespace prime
                                                   >,
                                     mpl::false_,
                                     is_prime< mpl::integral_c< T, Value >, 
-                                              mpl::plus< mpl::integral_c< T, 1 >, 
-                                                         mpl::integral_c< T, ValueDiv > 
-                                                         > 
+                                              typename mpl::integral_c< T, ValueDiv >::next
                                               >
                       >
         >::type
