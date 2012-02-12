@@ -168,13 +168,16 @@ int main(int argc, char** argv)
     {
         if(org[y] != primesVec[y])
         {
+			std::cout << std::endl;
             std::cout << "Error!" << std::endl;
             std::cout << "element: " << y << std::endl;
             std::cout << "org[y]: " << org[y] << std::endl;
             std::cout << "tabprime[y]: " << primesVec[y] << std::endl;
             break;
         }
+		std::cout << primesVec[y] << ", ";
     }
+	std::cout << std::endl;
 
     return 0;
 }
