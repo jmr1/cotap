@@ -45,8 +45,8 @@ namespace boost { namespace mpl {
 
 
 template < 
-	typename N, typename T 
-	> 
+    typename N, typename T 
+    > 
 struct r_iter_ex
 {
     typedef aux::r_iter_tag tag;

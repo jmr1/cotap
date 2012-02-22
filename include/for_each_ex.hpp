@@ -93,7 +93,7 @@ struct for_each_ex_impl<false>
         aux::unwrap(f, 0)(boost::get(x));
         
         typedef typename mpl::next<Iterator>::type iter;
-		// jrupar 22.02.2012 -- use greater_equal instead is_same
+        // jrupar 22.02.2012 -- use greater_equal instead is_same
         for_each_ex_impl<boost::mpl::greater_equal<boost::mpl::deref<iter>::type,boost::mpl::deref<LastIterator>::type >::value>
             ::execute( static_cast<iter*>(0), static_cast<LastIterator*>(0), static_cast<TransformFunc*>(0), f);
     }
@@ -116,7 +116,7 @@ void for_each_ex(F f, Sequence* = 0, TransformOp* = 0)
     typedef typename begin<Sequence>::type first;
     typedef typename end<Sequence>::type last;
 
-	// jrupar 22.02.2012 -- use greater_equal instead is_same
+    // jrupar 22.02.2012 -- use greater_equal instead is_same
     aux::for_each_ex_impl< boost::mpl::greater_equal<boost::mpl::deref<first>::type,boost::mpl::deref<last>::type >::value >
         ::execute(static_cast<first*>(0), static_cast<last*>(0), static_cast<TransformOp*>(0), f);
 }

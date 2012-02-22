@@ -45,8 +45,8 @@ namespace boost { namespace mpl {
 
 
 template < 
-	typename N, typename T 
-	> 
+    typename N, typename T 
+    > 
 struct r_iter_func
 {
     typedef aux::r_iter_tag tag;
@@ -65,7 +65,7 @@ template<
     >
 struct next< r_iter_func<N,T> >
 {
-	typedef r_iter_func< typename apply1<T,N>::type, T > type;
+    typedef r_iter_func< typename apply1<T,N>::type, T > type;
 };
 
 #endif
@@ -87,7 +87,7 @@ struct range_c_func
 
     typedef integral_c<T,Start> start;
     typedef integral_c<T,Finish> finish;
-	typedef typename lambda<typename Functor>::type functor;
+    typedef typename lambda<typename Functor>::type functor;
 
     typedef r_iter_func<start, functor > begin;
     typedef r_iter_func<finish, functor > end;

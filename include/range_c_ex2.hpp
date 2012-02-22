@@ -45,14 +45,14 @@ namespace boost { namespace mpl {
 
 
 template< 
-	typename N, typename S, typename FS, typename F 
-	> 
+    typename N, typename S, typename FS, typename F 
+    > 
 struct r_iter_ex2
 {
     typedef aux::r_iter_tag tag;
     typedef forward_iterator_tag category;
     typedef N type;
-	typedef S step;
+    typedef S step;
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
     typedef r_iter_ex2< typename apply2<F, N, S>::type, typename apply1<FS, S>::type, FS,  F >::type > next;
@@ -66,7 +66,7 @@ template<
     >
 struct next< r_iter_ex2<N,S,FS,F> >
 {
-	typedef r_iter_ex2< typename apply2<F, N, S>::type, typename apply1<FS, S>::type, FS,  F > type;
+    typedef r_iter_ex2< typename apply2<F, N, S>::type, typename apply1<FS, S>::type, FS,  F > type;
 };
 
 #endif
@@ -78,8 +78,8 @@ template<
       typename T
     , T Start
     , T Finish
-	, T Step
-	, typename FunctorStep
+    , T Step
+    , typename FunctorStep
     , typename Functor
     >
 struct range_c_ex2
@@ -90,9 +90,9 @@ struct range_c_ex2
 
     typedef integral_c<T,Start> start;
     typedef integral_c<T,Finish> finish;
-	typedef integral_c<T,Step> step;
-	typedef typename lambda<typename FunctorStep>::type functor_step;
-	typedef typename lambda<typename Functor>::type functor;
+    typedef integral_c<T,Step> step;
+    typedef typename lambda<typename FunctorStep>::type functor_step;
+    typedef typename lambda<typename Functor>::type functor;
 
     typedef r_iter_ex2<start, step, functor_step, functor > begin;
     typedef r_iter_ex2<finish, step, functor_step, functor > end;
