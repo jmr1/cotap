@@ -37,15 +37,21 @@
 #include <boost/mpl/aux_/range_c/size.hpp>
 #include <boost/mpl/aux_/range_c/O1_size.hpp>
 #include <boost/mpl/aux_/range_c/empty.hpp>
-#include <boost/mpl/aux_/range_c/iterator.hpp>
+#include <boost/mpl/plus.hpp>
+#include <boost/mpl/minus.hpp>
 #include <boost/mpl/aux_/range_c/tag.hpp>
 
 namespace boost { namespace mpl {
 
 
-template< typename N, typename T > struct r_iter_ex :
-    r_iter<N>
+template < 
+	typename N, typename T 
+	> 
+struct r_iter_ex
 {
+    typedef aux::r_iter_tag tag;
+    typedef random_access_iterator_tag category;
+    typedef N type;
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
     typedef r_iter_ex< typename mpl::plus< N, T >::type > next;
@@ -60,6 +66,14 @@ template<
 struct next< r_iter_ex<N,T> >
 {
     typedef r_iter_ex< typename mpl::plus< N, T >::type, T > type;
+};
+
+template<
+      typename N, typename T
+    >
+struct prior< r_iter_ex<N,T> >
+{
+    typedef r_iter_ex< typename mpl::minus< N, T >::type, T > type;
 };
 
 #endif
