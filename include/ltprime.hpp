@@ -41,15 +41,29 @@
 
 #include <boost/mpl/alias.hpp>
 
-#include "range_c_ex.hpp"
+#include "range_c_ex2.hpp"
 #include "error.hpp"
+
+#include "prime.hpp"
 
 
 
 namespace ltprime
 {
+    template <typename Value>
+    struct is_ltprime :
+        prime::is_prime<Value>
+    {};
 
+    template <typename T, T StartValue = 13, T EndValue = 103, T StepStart = 4>
+    struct ltprime_gen_c :
+        mpl::filter_view<
+            typename mpl::range_c_ex2<int, StartValue, EndValue, StepStart, mpl::minus<mpl::int_<10>, mpl::_ >, mpl::plus<mpl::_, mpl::_ > >,
+            is_ltprime< mpl::_ >
+        >::type
+    {
 
+    };
 }
 
 #endif // COTAP_LTPRIME_HPP_INCLUDED

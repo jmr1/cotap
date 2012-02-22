@@ -81,7 +81,7 @@ int main(int argc, char** argv)
     BOOST_MPL_ASSERT_RELATION( mpl::deref<rce_begin>::type::value, ==, 3 );
     BOOST_MPL_ASSERT_RELATION( mpl::deref<rce_end>::type::value, ==, 9 );
 
-    std::vector<int> ltprimesVec;
+    //std::vector<int> ltprimesVec;
     //mpl::for_each< rce, mpl::_ >(boost::bind(static_cast<void(std::vector<int>::*)(const int&)>(&std::vector<int>::push_back), &ltprimesVec, _1));
 
     typedef mpl::range_c_func<int, 3, 10, mpl::plus<mpl::_, mpl::int_<3> > >::type rcf;
@@ -101,10 +101,16 @@ int main(int argc, char** argv)
     typedef mpl::next<rce2::begin>::type rce2_next;
     BOOST_MPL_ASSERT_RELATION( mpl::deref<rce2_next>::type::value, ==, 17 );
 
-    mpl::for_each_ex< rce2, mpl::_ >(boost::bind(static_cast<void(std::vector<int>::*)(const int&)>(&std::vector<int>::push_back), &ltprimesVec, _1));
+    //mpl::for_each_ex< rce2, mpl::_ >(boost::bind(static_cast<void(std::vector<int>::*)(const int&)>(&std::vector<int>::push_back), &ltprimesVec, _1));
 
-    //std::vector<int> ltprimesVec(1, 2);
-    //mpl::for_each< primes, mpl::_ >(boost::bind(static_cast<void(std::vector<int>::*)(const int&)>(&std::vector<int>::push_back), &primesVec, _1));
+    typedef ltprime::ltprime_gen_c<int>::type ltprimes;
+
+    std::vector<int> ltprimesVec(4);
+    ltprimesVec[0] = 2;
+    ltprimesVec[1] = 3;
+    ltprimesVec[2] = 5;
+    ltprimesVec[3] = 7;
+    mpl::for_each< ltprimes, mpl::_ >(boost::bind(static_cast<void(std::vector<int>::*)(const int&)>(&std::vector<int>::push_back), &ltprimesVec, _1));
 
     
     int cnt = ltprimesVec.size();
