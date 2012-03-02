@@ -38,6 +38,7 @@
 #include <boost/mpl/greater.hpp>
 #include <boost/mpl/less.hpp>
 #include <boost/mpl/times.hpp>
+#include <boost/mpl/divides.hpp>
 
 #include <boost/mpl/alias.hpp>
 
@@ -50,12 +51,46 @@
 
 namespace ltprime
 {
-    template <typename Value>
-    struct is_ltprime :
-        prime::is_prime<Value>
+    template <typename Value, typename ValueDiv = mpl::int_<100> >
+    struct has_zero :
+        mpl::eval_if< mpl::greater<ValueDiv, Value >,
+                      mpl::false_,
+                      mpl::eval_if< mpl::less< mpl::modulus< Value, ValueDiv >, 
+                                               mpl::divides< ValueDiv, mpl::int_<10> > 
+                                               >,
+                                    mpl::true_,
+                                    typename has_zero< Value, 
+                                                       mpl::times< ValueDiv, mpl::int_<10> > 
+                                                       >
+                      >
+        >::type
     {};
 
-    template <typename T, T StartValue = 13, T EndValue = 103, T StepStart = 4>
+    template <typename Value, typename ValueDiv = mpl::int_<100> >
+    struct is_trunc_prime :
+        mpl::eval_if< mpl::equal_to< Value, mpl::modulus< Value, ValueDiv > >,
+                      mpl::true_,
+                      mpl::eval_if< typename prime::is_prime< mpl::modulus< Value, ValueDiv > >,
+                      typename is_trunc_prime< Value, mpl::times< ValueDiv, mpl::int_<10> > >,
+                                    mpl::false_
+                                    >
+                      >::type
+    {};
+
+    template <typename Value>
+    struct is_ltprime :
+        mpl::eval_if< mpl::greater< Value, mpl::int_<100> >,
+                      mpl::eval_if< typename has_zero<Value>, 
+                                    mpl::false_,
+                                    mpl::eval_if< typename prime::is_prime< Value >,
+                                                  typename is_trunc_prime< Value >,
+                                                  mpl::false_>
+                                 >,
+                      prime::is_prime<Value>
+        >::type
+    {};
+
+    template <typename T, T StartValue = 13, T EndValue = 203, T StepStart = 4>
     struct ltprime_gen_c :
         mpl::filter_view<
             typename mpl::range_c_ex2<int, StartValue, EndValue, StepStart, mpl::minus<mpl::int_<10>, mpl::_ >, mpl::plus<mpl::_, mpl::_ > >,
