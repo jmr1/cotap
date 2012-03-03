@@ -103,13 +103,9 @@ namespace prime
                                     mpl::integral_c< T, Value > 
                                     >,
                       mpl::true_,
-                      mpl::eval_if< is_divisible< mpl::integral_c< T, Value >, 
-                                                  mpl::integral_c< T, ValueDiv > 
-                                                  >,
+                      mpl::eval_if< is_divisible_c< T, Value, ValueDiv >,
                                     mpl::false_,
-                                    is_prime< mpl::integral_c< T, Value >, 
-                                              typename mpl::integral_c< T, ValueDiv >::next
-                                              >
+                                    is_prime_c< T, Value, (ValueDiv+1) >
                       >
         >::type
     {
