@@ -82,6 +82,20 @@ int main(int argc, char** argv)
     BOOST_MPL_ASSERT_RELATION( has0_1013::value, ==, true );
     BOOST_MPL_ASSERT_RELATION( has0_1113::value, ==, false );
 
+    typedef ltprime::has_zero_c<int, 103>::type has0c_103;
+    typedef ltprime::has_zero_c<int, 113>::type has0c_113;
+    typedef ltprime::has_zero_c<int, 127>::type has0c_127;
+    typedef ltprime::has_zero_c<int, 1003>::type has0c_1003;
+    typedef ltprime::has_zero_c<int, 1013>::type has0c_1013;
+    typedef ltprime::has_zero_c<int, 1113>::type has0c_1113;
+
+    BOOST_MPL_ASSERT_RELATION( has0c_103::value, ==, true );
+    BOOST_MPL_ASSERT_RELATION( has0c_113::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( has0c_127::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( has0c_1003::value, ==, true );
+    BOOST_MPL_ASSERT_RELATION( has0c_1013::value, ==, true );
+    BOOST_MPL_ASSERT_RELATION( has0c_1113::value, ==, false );
+
     //typedef ltprime::is_trunc_prime< mpl::int_<103> >::type istrunc_103; // does not check if there are zeros
     typedef ltprime::is_trunc_prime< mpl::int_<113> >::type istrunc_113;
     typedef ltprime::is_trunc_prime< mpl::int_<127> >::type istrunc_127;
@@ -98,19 +112,35 @@ int main(int argc, char** argv)
     BOOST_MPL_ASSERT_RELATION( istrunc_1113::value, ==, true );// 1113 is not ltprime but 113 and 13 are because it checks truncated values only
     BOOST_MPL_ASSERT_RELATION( istrunc_1223::value, ==, true );
 
-    typedef ltprime::is_ltprime< mpl::int_<103> >::type isltp_103;
-    typedef ltprime::is_ltprime< mpl::int_<113> >::type isltp_113;
-    typedef ltprime::is_ltprime< mpl::int_<1003> >::type isltp_1003;
-    typedef ltprime::is_ltprime< mpl::int_<1013> >::type isltp_1013;
-    typedef ltprime::is_ltprime< mpl::int_<1113> >::type isltp_1113;
-    typedef ltprime::is_ltprime< mpl::int_<127> >::type isltp_127;
+    //typedef ltprime::is_trunc_prime_c< int, 103>::type istruncc_103; // does not check if there are zeros
+    typedef ltprime::is_trunc_prime_c< int, 113>::type istruncc_113;
+    typedef ltprime::is_trunc_prime_c< int, 127>::type istruncc_127;
+    //typedef ltprime::is_trunc_prime_c< int, 1003>::type istruncc_1003;
+    //typedef ltprime::is_trunc_prime_c< int, 1013>::type istrunc_1013;
+    typedef ltprime::is_trunc_prime_c< int, 1113>::type istruncc_1113;
+    typedef ltprime::is_trunc_prime_c< int, 1223>::type istruncc_1223;
+
+    //BOOST_MPL_ASSERT_RELATION( istruncc_103::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( istruncc_113::value, ==, true );
+    BOOST_MPL_ASSERT_RELATION( istruncc_127::value, ==, false );
+    //BOOST_MPL_ASSERT_RELATION( istruncc_1003::value, ==, false );
+    //BOOST_MPL_ASSERT_RELATION( istrunc_1013::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( istruncc_1113::value, ==, true );// 1113 is not ltprime but 113 and 13 are because it checks truncated values only
+    BOOST_MPL_ASSERT_RELATION( istruncc_1223::value, ==, true );
+
+    typedef ltprime::is_ltprime_c< int, 103>::type isltpc_103;
+    typedef ltprime::is_ltprime_c< int, 113>::type isltpc_113;
+    typedef ltprime::is_ltprime_c< int, 1003>::type isltpc_1003;
+    typedef ltprime::is_ltprime_c< int, 1013>::type isltpc_1013;
+    typedef ltprime::is_ltprime_c< int, 1113>::type isltpc_1113;
+    typedef ltprime::is_ltprime_c< int, 127>::type isltpc_127;
     
-    BOOST_MPL_ASSERT_RELATION( isltp_103::value, ==, false );
-    BOOST_MPL_ASSERT_RELATION( isltp_113::value, ==, true );
-    BOOST_MPL_ASSERT_RELATION( isltp_1003::value, ==, false );
-    BOOST_MPL_ASSERT_RELATION( isltp_1013::value, ==, false );
-    BOOST_MPL_ASSERT_RELATION( isltp_1113::value, ==, false );
-    BOOST_MPL_ASSERT_RELATION( isltp_127::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( isltpc_103::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( isltpc_113::value, ==, true );
+    BOOST_MPL_ASSERT_RELATION( isltpc_1003::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( isltpc_1013::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( isltpc_1113::value, ==, false );
+    BOOST_MPL_ASSERT_RELATION( isltpc_127::value, ==, false );
 
     typedef mpl::range_c_ex< int, 3, 9, 2>::type rce;
     typedef mpl::next<rce::begin>::type rce_next;

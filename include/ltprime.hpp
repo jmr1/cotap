@@ -66,12 +66,46 @@ namespace ltprime
         >::type
     {};
 
+    template <typename T, T Value, T ValueDiv = 100>
+    struct has_zero_c :
+        mpl::eval_if< mpl::greater< mpl::integral_c<T, ValueDiv>, mpl::integral_c<T, Value> >,
+                      mpl::false_,
+                      mpl::eval_if< mpl::less< mpl::modulus< mpl::integral_c<T, Value>, mpl::integral_c<T, ValueDiv> >, 
+                                               mpl::divides< mpl::integral_c<T, ValueDiv>, mpl::int_<10> > 
+                                               >,
+                                    mpl::true_,
+                                    typename has_zero_c< T, Value, 
+                                                       mpl::times< mpl::integral_c<T, ValueDiv>, mpl::int_<10> >::value 
+                                                       >
+                      >
+        >::type
+    {};
+
     template <typename Value, typename ValueDiv = mpl::int_<100> >
     struct is_trunc_prime :
         mpl::eval_if< mpl::equal_to< Value, mpl::modulus< Value, ValueDiv > >,
                       mpl::true_,
                       mpl::eval_if< typename prime::is_prime< mpl::modulus< Value, ValueDiv > >,
-                      typename is_trunc_prime< Value, mpl::times< ValueDiv, mpl::int_<10> > >,
+                                    typename is_trunc_prime< Value, 
+                                                             mpl::times< ValueDiv, 
+                                                                         mpl::int_<10> 
+                                                                         > 
+                                                             >,
+                                    mpl::false_
+                                    >
+                      >::type
+    {};
+
+    template <typename T, T Value, T ValueDiv = 100>
+    struct is_trunc_prime_c :
+        mpl::eval_if< mpl::equal_to< mpl::integral_c<T, Value>, mpl::modulus< mpl::integral_c<T, Value>, mpl::integral_c<T, ValueDiv> > >,
+                      mpl::true_,
+                      mpl::eval_if< typename prime::is_prime_c< T, mpl::modulus< mpl::integral_c<T, Value>, mpl::integral_c<T, ValueDiv> >::value >,
+                                    typename is_trunc_prime_c< T, Value, 
+                                                             mpl::times< mpl::integral_c<T, ValueDiv>, 
+                                                                         mpl::int_<10> 
+                                                                         >::value 
+                                                             >,
                                     mpl::false_
                                     >
                       >::type
@@ -90,7 +124,20 @@ namespace ltprime
         >::type
     {};
 
-    template <typename T, T StartValue = 13, T EndValue = 203, T StepStart = 4>
+    template <typename T, T Value>
+    struct is_ltprime_c :
+        mpl::eval_if< mpl::greater< mpl::integral_c<T, Value>, mpl::int_<100> >,
+                      mpl::eval_if< typename has_zero_c<T, Value>, 
+                                    mpl::false_,
+                                    mpl::eval_if< typename prime::is_prime_c< T, Value >,
+                                                  typename is_trunc_prime_c< T, Value >,
+                                                  mpl::false_>
+                                 >,
+                      prime::is_prime_c<T, Value>
+        >::type
+    {};
+
+    template <typename T, T StartValue = 13, T EndValue = 303, T StepStart = 4>
     struct ltprime_gen_c :
         mpl::filter_view<
             typename mpl::range_c_ex2<int, StartValue, EndValue, StepStart, mpl::minus<mpl::int_<10>, mpl::_ >, mpl::plus<mpl::_, mpl::_ > >,
